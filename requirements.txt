@@ -1,0 +1,7 @@
+SQLAlchemy
+PyYAML
+Flask
+flask-cors
+pytest
+typer
+Flask-SQLAlchemy

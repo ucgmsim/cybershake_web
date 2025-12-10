@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "app_template"
+authors = [
+    {name = "Joel Ridden" },
+]
+description = "Helpful for app react / flask templates"
+readme = "README.md"
+requires-python = "==3.*"
+dynamic = ["version", "dependencies"]
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.ruff.lint]
+extend-select = [
+  # isort imports
+  "I",
+  # Use r'\s+' rather than '\s+'
+  "W605",
+  # All the naming errors, like using camel case for function names.
+  "N",
+  # Missing docstrings in classes, methods, and functions
+  "D101",
+  "D102",
+  "D103",
+  "D105",
+  "D107",
+  # Use f-string instead of a format call
+  "UP032",
+  # Standard library import is deprecated
+  "UP035",
+  # Missing function argument type-annotation
+  "ANN001",
+  "ANN002",
+  "ANN003",
+  "ANN201",
+  "ANN202",
+  "ANN204",
+  "ANN205",
+  # Using except without specifying an exception type to catch
+  "BLE001",
+]
+ignore = [
+  "D104",
+  # Ignore lowercase name checking
+  "N802",
+  "N803",
+  "N806",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.isort]
+known-first-party = ["backend"]
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore no docstring in __init__.py
+"__init__.py" = ["D104"]
+# Ignore docstring errors in tests folder
+"tests/**.py" = ["D"]
+
+[tool.numpydoc_validation]
+checks = [
+  "GL05",
+  "GL08",
+  "GL10",
+  "PR01",
+  "PR02",
+  "PR03",
+  "PR04",
+  "PR05",
+  "PR06",
+  "PR07",
+  "RT01",
+  "RT02",
+  "RT03",
+  "RT04",
+  "YD01",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "coverage[toml]>=7.5"
+]
