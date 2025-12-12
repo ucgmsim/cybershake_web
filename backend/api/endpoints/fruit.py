@@ -1,3 +1,5 @@
+import os
+import csv
 from flask import jsonify, request
 from flask_cors import cross_origin
 
@@ -7,32 +9,37 @@ from backend.db import db
 from backend.db.models import Fruit
 
 
-@server.app.route(const.GET_FRUITS, methods=["GET"])
+CSV_DEFAULT_PATH = os.path.join("/home/joel/code/cybershake_web/backend/data", "points.csv")  # or use const.POINTS_CSV / server.config
+
+@server.app.route(const.GET_POINTS, methods=["GET"])
 @cross_origin(expose_headers=["Content-Type", "Authorization"])
 @utils.endpoint_exception_handling(server.app)
-def get_items():
-    server.app.logger.info(f"Received request at {const.GET_FRUITS}")
-    # Get the fruits from the database
-    fruits = db.get_fruits()
-    # Return the fruits as JSON
-    return jsonify(fruits), 200
+def get_points():
+    """
+    Reads a CSV with headers 'lat','lon','value' and returns a JSON list of dicts.
+    """
+    server.app.logger.info(f"Received request at {const.GET_POINTS}")
 
-@server.app.route(const.GET_FRUITS, methods=["POST"])
-@cross_origin(expose_headers=["Content-Type", "Authorization"])
-@utils.endpoint_exception_handling(server.app)
-def create_fruit():
-    server.app.logger.info("POST request to create fruit")
+    csv_path = server.app.config.get("POINTS_CSV", CSV_DEFAULT_PATH)
+    points = []
 
-    data = request.get_json()
-    fruit_name = data.get("fruit_name")
+    if not os.path.exists(csv_path):
+        server.app.logger.error(f"Points CSV not found: {csv_path}")
+        return jsonify({"error": "points file not found"}), 404
 
-    if not fruit_name:
-        return jsonify({"error": "Fruit name is required"}), 400
+    with open(csv_path, newline="") as fh:
+        reader = csv.DictReader(fh)
+        for i, row in enumerate(reader):
+            try:
+                lat = float(row.get("lat", row.get("latitude", "")))
+                lon = float(row.get("lon", row.get("longitude", "")))
+                value = float(row.get("value", row.get("val", "")))
+            except (TypeError, ValueError):
+                # skip malformed rows
+                continue
+            points.append({"lat": lat, "lon": lon, "value": value})
 
-    fruit = Fruit(fruit=fruit_name)
-    fruit.save()
-
-    return jsonify(fruit.to_json()), 201
+    return jsonify(points), 200
 
 @server.app.route(const.UPDATE_FRUIT, methods=["PUT"])
 @cross_origin(expose_headers=["Content-Type", "Authorization"])

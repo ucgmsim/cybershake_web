@@ -1,0 +1,42 @@
+{
+  "hazard_curves": {
+    "folder": "01-CS_Hazard_Curves",
+    "subfolder": null,
+    "template": "[station_name]_[im].png"
+  },
+  "uhs_linear": {
+    "folder": "02-CS_UHS",
+    "subfolder": "linear-linear",
+    "template": "uhs_rp_[return_period]_[station_name].png"
+  },
+  "uhs_log": {
+    "folder": "02-CS_UHS",
+    "subfolder": "log-log",
+    "template": "log_uhs_rp_[return_period]_[station_name].png"
+  },
+  "hazard_maps": {
+    "folder": "07-Hazard_Maps",
+    "subfolder": null,
+    "template": "hazard_map_[source_of_result]_[im]_[return_period].png"
+  },
+  "ratio_maps": {
+    "folder": "07-Hazard_Maps",
+    "subfolder": null,
+    "template": "ratio_map_[source_of_result]_[im]_[return_period].png"
+  },
+  "hazard_disaggregation_maps": {
+    "folder": "08-Hazard_Disaggregation",
+    "subfolder": "01-Disagg_Maps",
+    "template": "map_[source_of_result]_fault_disag_[station_name]_[im]_[return_period].png"
+  },
+  "hazard_disaggregation_curves": {
+      "folder": "08-Hazard_Disaggregation",
+      "subfolder": "02-Disagg_Curves",
+      "template": "[source_of_result]_fault_disag_[station_name]_pSA_5.0.png"
+  },
+  "im_comparison": {
+    "folder": "09-IM_Comparison",
+    "subfolder": null,
+    "template": "cs_flt_im_comparison_[station_name]_[im].png"
+  }
+}

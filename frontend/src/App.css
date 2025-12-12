@@ -1,0 +1,15 @@
+/*.map-container {*/
+/*    height: 100vh; !* or a fixed height like 500px *!*/
+/*    width: 100%;   !* Ensure full width *!*/
+/*}*/
+
+.triangle-marker {
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-bottom: 20px solid blue; /* Default color */
+}
+
+.triangle-marker.selected {
+    border-bottom-color: red; /* Color when selected */
+}
