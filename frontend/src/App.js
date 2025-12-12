@@ -33,7 +33,7 @@ export function buildFilePath(type, selections) {
 
   // Build final path
   const pathParts = [
-    "/plots",
+    "plots",
     rule.folder,
     rule.subfolder || "",
     filename
