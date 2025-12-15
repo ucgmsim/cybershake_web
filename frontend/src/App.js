@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import './App.css';
 
-import { Box, Button, ToggleButton, ToggleButtonGroup, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
+import { Alert, Box, ToggleButton, ToggleButtonGroup, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
 
 import rules from "./config/fileRules.json";
 
@@ -45,39 +45,22 @@ export function buildFilePath(type, selections) {
 export default function App() {
 
   const imOptionsMaps = [
-    { value: "pSA_0.01", label: "pSA_0.01" },
-    { value: "pSA_0.3", label: "pSA_0.3" },
-    { value: "pSA_0.5", label: "pSA_0.5" },
-    { value: "pSA_1.0", label: "pSA_1.0" },
-    { value: "pSA_2.0", label: "pSA_2.0" },
-    { value: "pSA_3.0", label: "pSA_3.0" },
-    { value: "pSA_5.0", label: "pSA_5.0" },
+    { value: "pSA_0.01", label: "pSA(0.01 s)" },
+    { value: "pSA_0.3", label: "pSA(0.3 s)" },
+    { value: "pSA_0.5", label: "pSA(0.5 s)" },
+    { value: "pSA_1.0", label: "pSA(1.0 s)" },
+    { value: "pSA_2.0", label: "pSA(2.0 s)" },
+    { value: "pSA_3.0", label: "pSA(3.0 s)" },
+    { value: "pSA_5.0", label: "pSA(5.0 s)" },
   ];
 
-  const imOptionsSiteHazCurve = [
-    { value: "pSA_0.01", label: "pSA_0.01" },
-    { value: "pSA_1.0", label: "pSA_1.0" },
-    { value: "pSA_3.0", label: "pSA_3.0" },
-    { value: "pSA_5.0", label: "pSA_5.0" },
-  ];
-
-  const imOptionsSiteDisagg = [
-    { value: "pSA_0.01", label: "pSA_0.01" },
-    { value: "pSA_0.5", label: "pSA_0.5" },
-    { value: "pSA_1.0", label: "pSA_1.0" },
-    { value: "pSA_2.0", label: "pSA_2.0" },
-    { value: "pSA_3.0", label: "pSA_3.0" },
-    { value: "pSA_5.0", label: "pSA_5.0" },
-  ];
-
-
-  const imOptionsSiteIM = [
-    { value: "pSA_0.01", label: "pSA_0.01" },
-    { value: "pSA_0.5", label: "pSA_0.5" },
-    { value: "pSA_1.0", label: "pSA_1.0" },
-    { value: "pSA_2.0", label: "pSA_2.0" },
-    { value: "pSA_3.0", label: "pSA_3.0" },
-    { value: "pSA_5.0", label: "pSA_5.0" },
+  const imOptionsSite = [
+    { value: "pSA_0.01", label: "pSA(0.01 s)" },
+    { value: "pSA_0.5", label: "pSA(0.5 s)" },
+    { value: "pSA_1.0", label: "pSA(1.0 s)" },
+    { value: "pSA_2.0", label: "pSA(2.0 s)" },
+    { value: "pSA_3.0", label: "pSA(3.0 s)" },
+    { value: "pSA_5.0", label: "pSA(5.0 s)" },
   ];
 
   const returnPeriodOptions = [
@@ -85,36 +68,37 @@ export default function App() {
     { value: "2475", label: "2% in 50 Years" },
   ];
 
-  const hazardTabs = [
-    { value: 'csds', label: 'Cybershake Distributed Seismicity' },
-    { value: 'fltds', label: 'Empirical Logic Tree Distributed Seismicity' },
-    { value: 'cs', label: 'Cybershake' },
-    { value: 'flt', label: 'Empirical Logic Tree' }
+  const TotalHazardTabs = [
+    { value: 'csds', label: 'Cybershake NZ' },
+    { value: 'fltds', label: 'Empirical Logic Tree Mean' },
+    { value: 'csds-fltds', label: 'Ln(Cybershake NZ / Empirical)' },
   ];
-  const ratioTabs = [
-    { value: 'csds-fltds', label: 'Cybershake Distributed Seismicity & Empirical Logic Tree Distributed Seismicity' },
-    { value: 'cs-flt', label: 'Cybershake & Empirical Logic Tree' }
+  const FaultSourceTabs = [
+    { value: 'cs', label: 'Cybershake NZ' },
+    { value: 'flt', label: 'Empirical Logic Tree Mean' },
+    { value: 'cs-flt', label: 'Ln(Cybershake NZ / Empirical)' }
   ];
 
   const siteTabs = [
     { value: 'hazard_curves', label: 'Hazard Curves' },
     { value: 'uhs', label: 'UHS' },
     { value: 'disagg', label: 'Disaggregation Maps' },
-    { value: 'im_comparison', label: 'IM Comparison' },
+    { value: 'im_comparison', label: 'IM Distribution Comparison' },
   ];
 
   const [im, setIm] = useState(imOptionsMaps[0].value);
-  const [imSiteHazCurve, setImSiteHazCurve] = useState(imOptionsSiteHazCurve[0].value);
-  const [imSiteDisagg, setImSiteDisagg] = useState(imOptionsSiteDisagg[0].value);
-  const [imSiteIM, setImSiteIM] = useState(imOptionsSiteIM[0].value);
+  const [imSiteHazCurve, setImSiteHazCurve] = useState(imOptionsSite[0].value);
+  const [imSiteDisagg, setImSiteDisagg] = useState(imOptionsSite[0].value);
+  const [imSiteIM, setImSiteIM] = useState(imOptionsSite[0].value);
   const [returnPeriod, setReturnPeriod] = useState(returnPeriodOptions[0].value);
   const [mode, setMode] = useState('Maps');
-  const [mapType, setMapType] = useState('Hazard');
+  const [mapType, setMapType] = useState('TotalHazard');
   const [tab, setTab] = useState('csds');
 
   function imagePathMap() {
     if (!im || !returnPeriod) return null;
-    const ruleType = mapType === "Hazard" ? "hazard_maps" : "ratio_maps";
+    const isRatio = tab === "csds-fltds" || tab === "cs-flt";
+    const ruleType = isRatio ? "ratio_maps" : "hazard_maps";
     return buildFilePath(ruleType, {
       source_of_result: tab,
       im,
@@ -162,7 +146,7 @@ export default function App() {
     return mode === "Maps" ? imagePathMap() : imagePathSite();
   }
 
-  const tabOptions = mapType === 'Hazard' ? hazardTabs : ratioTabs;
+  const tabOptions = mapType === 'TotalHazard' ? TotalHazardTabs : FaultSourceTabs;
 
   React.useEffect(() => {
     if (!tabOptions.some(opt => opt.value === tab)) {
@@ -195,6 +179,7 @@ export default function App() {
   const siteOptionsDisagg = [
     {'value': '02007b5', 'label': '02007b5', 'lat': '-41.94154', 'lon': '172.56189'},
     {'value': '2200692', 'label': '2200692', 'lat': '-42.388886022', 'lon': '173.677936606'},
+    {'value': 'AKUS', 'label': 'AKUS', 'lat': '-36.8532', 'lon': '174.7705'},
     {'value': 'CHHC', 'label': 'CHHC', 'lat': '-43.5359', 'lon': '172.6275'},
     {'value': 'DUNS', 'label': 'DUNS', 'lat': '-45.9052', 'lon': '170.4706'},
     {'value': 'FJDS', 'label': 'FJDS', 'lat': '-43.3891', 'lon': '170.1842'},
@@ -210,12 +195,6 @@ export default function App() {
     {'value': 'TBCS', 'label': 'TBCS', 'lat': '-37.7027', 'lon': '176.1567'},
     {'value': 'TPPS', 'label': 'TPPS', 'lat': '-38.6863', 'lon': '176.0675'},
     {'value': 'WKHS', 'label': 'WKHS', 'lat': '-37.9615', 'lon': '176.9855'}
-  ];
-
-
-  const disaggTabs = [
-    { value: 'cs', label: 'Cybershake' },
-    { value: 'flt', label: 'Empirical Logic Tree' }
   ];
 
   const [site, setSite] = useState(siteOptions[0].value);
@@ -263,15 +242,15 @@ export default function App() {
             display: "inline-block"
           }}
         >
-          Cybershake NZ 200 m Supplementary Materials
+          Cybershake NZ v25.6 Supplementary Materials
         </Typography>
         <ToggleButtonGroup
           value={mode}
           exclusive
           onChange={(e, val) => val && setMode(val)}
         >
-          <ToggleButton value="Maps">Maps</ToggleButton>
-          <ToggleButton value="Site Specific">Site Specific</ToggleButton>
+          <ToggleButton value="Maps">Uniform Hazard Ground-Motion Maps</ToggleButton>
+          <ToggleButton value="Site Specific">Site Specific Hazard Results</ToggleButton>
         </ToggleButtonGroup>
         {mode === "Maps" ? (
           <Box display="flex" flexDirection="column" gap={3}>
@@ -280,8 +259,8 @@ export default function App() {
               exclusive
               onChange={(e, val) => val && setMapType(val)}
             >
-              <ToggleButton value="Hazard">Hazard</ToggleButton>
-              <ToggleButton value="Ratio">Ratio</ToggleButton>
+              <ToggleButton value="TotalHazard">Total Hazard</ToggleButton>
+              <ToggleButton value="FaultSource">Fault Sources Only</ToggleButton>
             </ToggleButtonGroup>
             <ToggleButtonGroup
               value={tab}
@@ -303,8 +282,8 @@ export default function App() {
               </Select>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel>Return Period</InputLabel>
-              <Select value={returnPeriod} label="Return Period" onChange={(e) => setReturnPeriod(e.target.value)}>
+              <InputLabel>Probability of Exceedance (PoE)</InputLabel>
+              <Select value={returnPeriod} label="Probability of Exceedance (PoE)" onChange={(e) => setReturnPeriod(e.target.value)}>
                 {returnPeriodOptions.map(opt => (
                   <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
                 ))}
@@ -335,8 +314,8 @@ export default function App() {
                   <ToggleButton value="log">Log-Log</ToggleButton>
                 </ToggleButtonGroup>
                 <FormControl fullWidth>
-                  <InputLabel>Return Period</InputLabel>
-                  <Select value={returnPeriod} label="Return Period" onChange={e => setReturnPeriod(e.target.value)}>
+                  <InputLabel>Probability of Exceedance (PoE)</InputLabel>
+                  <Select value={returnPeriod} label="Probability of Exceedance (PoE)" onChange={e => setReturnPeriod(e.target.value)}>
                     {returnPeriodOptions.map(opt => (
                       <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
                     ))}
@@ -358,7 +337,7 @@ export default function App() {
                 <FormControl fullWidth>
                   <InputLabel>IM</InputLabel>
                   <Select value={imSiteHazCurve} label="IM" onChange={e => setImSiteHazCurve(e.target.value)}>
-                    {imOptionsSiteHazCurve.map(opt => (
+                    {imOptionsSite.map(opt => (
                       <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
                     ))}
                   </Select>
@@ -381,20 +360,23 @@ export default function App() {
                   exclusive
                   onChange={(e, val) => val && setDisaggMapType(val)}
                 >
-                  <ToggleButton value="csds">Cybershake Distributed Seismicity</ToggleButton>
-                  <ToggleButton value="fltds">Empirical Logic Tree Distributed Seismicity</ToggleButton>
+                  <ToggleButton value="csds">Cybershake NZ</ToggleButton>
+                  <ToggleButton value="fltds">Empirical Logic Tree Mean</ToggleButton>
                 </ToggleButtonGroup>
+                <Alert severity="info">
+                  IM values shown on the maps are based on the total hazard (Fault and Distributed Seismicity sources)
+                </Alert>
                 <FormControl fullWidth>
                   <InputLabel>IM</InputLabel>
                   <Select value={imSiteDisagg} label="IM" onChange={e => setImSiteDisagg(e.target.value)}>
-                    {imOptionsSiteDisagg.map(opt => (
+                    {imOptionsSite.map(opt => (
                       <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
                 <FormControl fullWidth>
-                  <InputLabel>Return Period</InputLabel>
-                  <Select value={returnPeriod} label="Return Period" onChange={e => setReturnPeriod(e.target.value)}>
+                  <InputLabel>Probability of Exceedance (PoE)</InputLabel>
+                  <Select value={returnPeriod} label="Probability of Exceedance (PoE)" onChange={e => setReturnPeriod(e.target.value)}>
                     {returnPeriodOptions.map(opt => (
                       <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
                     ))}
@@ -416,7 +398,7 @@ export default function App() {
                 <FormControl fullWidth>
                   <InputLabel>IM</InputLabel>
                   <Select value={imSiteIM} label="IM" onChange={e => setImSiteIM(e.target.value)}>
-                    {imOptionsSiteIM.map(opt => (
+                    {imOptionsSite.map(opt => (
                       <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
                     ))}
                   </Select>
@@ -441,7 +423,7 @@ export default function App() {
             >
               <MapContainer
                 center={nzCenter}
-                zoom={7}
+                zoom={6}
                 scrollWheelZoom={true}
                 style={{height: "100%",  width: "100%" }}
                 className="map-container"
